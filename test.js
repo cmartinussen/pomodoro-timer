@@ -1,22 +1,24 @@
 // test.js - Jest tests for Pomodoro Timer
 
-// Mock DOM elements
-document.body.innerHTML = `
-  <div id="minutes">25</div>
-  <div id="seconds">00</div>
-  <button id="start"></button>
-  <button id="pause"></button>
-  <button id="reset"></button>
-  <p id="current-session"></p>
-  <p id="next-session"></p>
-  <button id="dark-mode-toggle"></button>
-  <ul id="event-list"></ul>
-`;
-
-// Load the script
-require('./script.js');
-
 describe('Pomodoro Timer', () => {
+  beforeAll(() => {
+    // Mock DOM elements
+    document.body.innerHTML = `
+      <div id="minutes">25</div>
+      <div id="seconds">00</div>
+      <button id="start"></button>
+      <button id="pause"></button>
+      <button id="reset"></button>
+      <p id="current-session"></p>
+      <p id="next-session"></p>
+      <button id="dark-mode-toggle"></button>
+      <ul id="event-list"></ul>
+    `;
+
+    // Load the script after DOM is set up
+    require('./script.js');
+  });
+
   beforeEach(() => {
     // Reset global variables
     timer = null;
