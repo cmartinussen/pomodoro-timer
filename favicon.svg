@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      .tomato { fill: #e74c3c; }
+      .stem { fill: #27ae60; }
+      .highlight { fill: #ff6b6b; }
+    </style>
+  </defs>
+
+  <!-- Tomato body -->
+  <ellipse cx="16" cy="20" rx="12" ry="10" class="tomato"/>
+
+  <!-- Tomato highlight -->
+  <ellipse cx="12" cy="16" rx="4" ry="3" class="highlight" opacity="0.6"/>
+
+  <!-- Tomato stem -->
+  <rect x="14" y="8" width="4" height="6" rx="2" class="stem"/>
+  <ellipse cx="16" cy="8" rx="3" ry="2" class="stem"/>
+
+  <!-- Simple timer lines to represent Pomodoro -->
+  <line x1="16" y1="14" x2="16" y2="18" stroke="#fff" stroke-width="1" opacity="0.8"/>
+  <line x1="16" y1="14" x2="18" y2="16" stroke="#fff" stroke-width="1" opacity="0.8"/>
+</svg>
