@@ -29,5 +29,4 @@
     "testEnvironment": "jsdom",
     "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
   }
-}</content>
-<parameter name="filePath">c:\Users\crma\OneDrive - Howtodofashion\code\web\package.json
+}
