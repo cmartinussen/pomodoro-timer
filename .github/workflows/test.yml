@@ -3,8 +3,7 @@ name: Test
 on:
   push:
     branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -23,8 +22,3 @@ jobs:
 
     - name: Run tests
       run: npm test
-
-    - name: Build (if needed)
-      run: |
-        # Add build steps here if you add a build process later
-        echo "No build step required for static site"
