@@ -2,6 +2,8 @@
 
 A Japanese-inspired Pomodoro countdown clock built with HTML, CSS, and JavaScript.
 
+**Latest update: CI/CD pipeline configured** ✅
+
 ## Features
 
 - 25-minute work sessions
