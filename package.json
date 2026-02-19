@@ -1,0 +1,33 @@
+{
+  "name": "pomodoro-timer",
+  "version": "1.0.0",
+  "description": "A Japanese-inspired Pomodoro countdown clock built with HTML, CSS, and JavaScript.",
+  "main": "script.js",
+  "scripts": {
+    "test": "jest",
+    "start": "npx http-server . -p 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/pomodoro-timer.git"
+  },
+  "keywords": [
+    "pomodoro",
+    "timer",
+    "productivity",
+    "javascript",
+    "html",
+    "css"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"]
+  }
+}</content>
+<parameter name="filePath">c:\Users\crma\OneDrive - Howtodofashion\code\web\package.json
