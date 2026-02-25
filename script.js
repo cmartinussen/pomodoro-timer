@@ -13,7 +13,8 @@ let audioUnlocked = false;
 let settings = {
     workDuration: 25,
     shortBreakDuration: 5,
-    longBreakDuration: 30
+    longBreakDuration: 30,
+    popupAlerts: false
 };
 let timeLeft = settings.workDuration * 60; // Use settings for initial work duration
 
@@ -36,6 +37,7 @@ const workDurationInput = document.getElementById('work-duration');
 const shortBreakDurationInput = document.getElementById('short-break-duration');
 const longBreakDurationInput = document.getElementById('long-break-duration');
 const soundEnabledToggle = document.getElementById('sound-enabled-toggle');
+const popupAlertsToggle = document.getElementById('popup-alerts-toggle');
 
 // Settings functions
 function loadSettings() {
@@ -46,13 +48,15 @@ function loadSettings() {
             settings = {
                 workDuration: Number(parsedSettings.workDuration) || 25,
                 shortBreakDuration: Number(parsedSettings.shortBreakDuration) || 5,
-                longBreakDuration: Number(parsedSettings.longBreakDuration) || 30
+                longBreakDuration: Number(parsedSettings.longBreakDuration) || 30,
+                popupAlerts: parsedSettings.popupAlerts === true
             };
         } catch {
             settings = {
                 workDuration: 25,
                 shortBreakDuration: 5,
-                longBreakDuration: 30
+                longBreakDuration: 30,
+                popupAlerts: false
             };
         }
     }
@@ -60,6 +64,7 @@ function loadSettings() {
     workDurationInput.value = settings.workDuration;
     shortBreakDurationInput.value = settings.shortBreakDuration;
     longBreakDurationInput.value = settings.longBreakDuration;
+    popupAlertsToggle.checked = settings.popupAlerts;
 }
 
 function saveSettings() {
@@ -71,11 +76,13 @@ function resetSettings() {
     settings = {
         workDuration: 25,
         shortBreakDuration: 5,
-        longBreakDuration: 30
+        longBreakDuration: 30,
+        popupAlerts: false
     };
     workDurationInput.value = settings.workDuration;
     shortBreakDurationInput.value = settings.shortBreakDuration;
     longBreakDurationInput.value = settings.longBreakDuration;
+    popupAlertsToggle.checked = settings.popupAlerts;
     saveSettings();
     logEvent('Settings reset to defaults');
 }
@@ -354,13 +361,15 @@ function notifyUser() {
         });
     }
 
-    if (didPlaySound) {
-        // Give Safari a moment to start audio before opening a blocking alert.
-        setTimeout(() => {
+    if (settings.popupAlerts) {
+        if (didPlaySound) {
+            // Give Safari a moment to start audio before opening a blocking alert.
+            setTimeout(() => {
+                alert(message);
+            }, 550);
+        } else {
             alert(message);
-        }, 550);
-    } else {
-        alert(message);
+        }
     }
 }
 
@@ -434,10 +443,12 @@ saveSettingsButton.addEventListener('click', () => {
     settings.workDuration = Number.isFinite(workDuration) && workDuration > 0 ? workDuration : 25;
     settings.shortBreakDuration = Number.isFinite(shortBreakDuration) && shortBreakDuration > 0 ? shortBreakDuration : 5;
     settings.longBreakDuration = Number.isFinite(longBreakDuration) && longBreakDuration > 0 ? longBreakDuration : 30;
+    settings.popupAlerts = popupAlertsToggle.checked;
 
     workDurationInput.value = settings.workDuration;
     shortBreakDurationInput.value = settings.shortBreakDuration;
     longBreakDurationInput.value = settings.longBreakDuration;
+    popupAlertsToggle.checked = settings.popupAlerts;
     saveSettings();
     updateTimerFromSettings();
     closeSettingsModal();
