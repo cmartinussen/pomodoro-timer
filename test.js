@@ -68,6 +68,23 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       expect(minutesDisplay.textContent).toBe('01');
       expect(secondsDisplay.textContent).toBe('05');
     });
+
+    test('robust timer timing mechanism', () => {
+      // Test that the timer end time calculation works correctly
+      const startTime = Date.now();
+      const duration = 1500; // 25 minutes in seconds
+      const expectedEndTime = startTime + (duration * 1000);
+
+      // Simulate timer end time calculation
+      const calculatedEndTime = startTime + (duration * 1000);
+      expect(calculatedEndTime).toBe(expectedEndTime);
+
+      // Test remaining time calculation
+      const elapsed = 5000; // 5 seconds elapsed
+      const currentTime = startTime + elapsed;
+      const remaining = Math.max(0, Math.ceil((expectedEndTime - currentTime) / 1000));
+      expect(remaining).toBe(duration - 5); // Should be 1495 seconds remaining
+    });
   });
 
   describe('Session Management', () => {

@@ -4,6 +4,7 @@ let timeLeft = 25 * 60; // 25 minutes in seconds
 let isWorkSession = true;
 let pomodoroCount = 0;
 let isLongBreak = false;
+let timerEndTime = null; // Track when the timer should end
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
@@ -81,6 +82,10 @@ function toggleTimer() {
         // Pause the timer
         clearInterval(timer);
         isRunning = false;
+        // Recalculate timeLeft based on remaining time
+        if (timerEndTime) {
+            timeLeft = Math.max(0, Math.ceil((timerEndTime - Date.now()) / 1000));
+        }
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
         logEvent(`Timer paused with ${minutes}:${seconds.toString().padStart(2, '0')} remaining`);
@@ -90,23 +95,34 @@ function toggleTimer() {
         isRunning = true;
         logEvent('Timer started');
         toggleButton.textContent = 'Pause';
+        // Set end time based on remaining time
+        timerEndTime = Date.now() + (timeLeft * 1000);
+
         timer = setInterval(() => {
-            timeLeft--;
-            updateDisplay();
+            const now = Date.now();
+            const remaining = Math.max(0, Math.ceil((timerEndTime - now) / 1000));
+
+            if (remaining !== timeLeft) {
+                timeLeft = remaining;
+                updateDisplay();
+            }
+
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 isRunning = false;
+                timerEndTime = null;
                 toggleButton.textContent = 'Start';
                 notifyUser();
                 switchSession();
             }
-        }, 1000);
+        }, 100); // Check more frequently (every 100ms) for better accuracy
     }
 }
 
 function resetTimer() {
     clearInterval(timer);
     isRunning = false;
+    timerEndTime = null;
     timeLeft = 25 * 60;
     isWorkSession = true;
     pomodoroCount = 0;
