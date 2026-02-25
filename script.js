@@ -124,9 +124,10 @@ function toggleTimer() {
         logEvent(`Timer paused with ${minutes}:${seconds.toString().padStart(2, '0')} remaining`);
         toggleButton.textContent = 'Resume';
     } else {
-        // Start the timer
+        // Start or resume the timer
         isRunning = true;
-        logEvent('Timer started');
+        const wasPaused = toggleButton.textContent === 'Resume';
+        logEvent(wasPaused ? 'Timer resumed' : 'Timer started');
         toggleButton.textContent = 'Pause';
         // Set end time based on remaining time
         timerEndTime = Date.now() + (timeLeft * 1000);
