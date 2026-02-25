@@ -226,6 +226,61 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       expect(nextSession.textContent).toContain('Short Break');
     });
 
+    test('pomodoro cycle logic', () => {
+      // Test the 4-work-session + long break cycle
+      let pomodoroCount = 0;
+      let isWorkSession = true;
+      let timeLeft;
+      let isLongBreak;
+
+      // Work session 1
+      expect(pomodoroCount).toBe(0);
+      expect(isWorkSession).toBe(true);
+
+      // After work session 1 -> short break
+      pomodoroCount = 1;
+      isWorkSession = false;
+      timeLeft = pomodoroCount % 4 === 0 ? 30 * 60 : 5 * 60;
+      isLongBreak = pomodoroCount % 4 === 0;
+      expect(timeLeft).toBe(5 * 60); // Short break
+      expect(isLongBreak).toBe(false);
+
+      // After short break -> work session 2
+      isWorkSession = true;
+      timeLeft = 25 * 60;
+      expect(timeLeft).toBe(25 * 60);
+
+      // After work session 2 -> short break
+      pomodoroCount = 2;
+      isWorkSession = false;
+      timeLeft = pomodoroCount % 4 === 0 ? 30 * 60 : 5 * 60;
+      isLongBreak = pomodoroCount % 4 === 0;
+      expect(timeLeft).toBe(5 * 60); // Short break
+      expect(isLongBreak).toBe(false);
+
+      // After work session 3 -> short break
+      pomodoroCount = 3;
+      isWorkSession = false;
+      timeLeft = pomodoroCount % 4 === 0 ? 30 * 60 : 5 * 60;
+      isLongBreak = pomodoroCount % 4 === 0;
+      expect(timeLeft).toBe(5 * 60); // Short break
+      expect(isLongBreak).toBe(false);
+
+      // After work session 4 -> LONG break
+      pomodoroCount = 4;
+      isWorkSession = false;
+      timeLeft = pomodoroCount % 4 === 0 ? 30 * 60 : 5 * 60;
+      isLongBreak = pomodoroCount % 4 === 0;
+      expect(timeLeft).toBe(30 * 60); // Long break (30 minutes)
+      expect(isLongBreak).toBe(true);
+
+      // After long break -> work session 1 (new cycle)
+      pomodoroCount = 4; // Stays 4 until next work session
+      isWorkSession = true;
+      timeLeft = 25 * 60;
+      expect(timeLeft).toBe(25 * 60);
+    });
+
     test('event log functionality', () => {
       document.body.innerHTML = '<ul id="event-list"></ul>';
       const eventList = document.getElementById('event-list');

@@ -66,16 +66,47 @@ function updateDisplay() {
 
 function updateSessionInfo() {
     if (isWorkSession) {
-        currentSession.textContent = 'Current Session: Work (25 min)';
-        nextSession.textContent = pomodoroCount % 4 === 3 ? 'Next: Long Break (15 min)' : 'Next: Short Break (5 min)';
+        const currentWorkSession = (pomodoroCount % 4) + 1;
+        currentSession.textContent = `Current Session: Work (25 min)`;
+        nextSession.textContent = pomodoroCount % 4 === 3 ? 'Next: Long Break (30 min)' : 'Next: Short Break (5 min)';
+        updateCycleProgress(currentWorkSession, true);
     } else {
         if (isLongBreak) {
-            currentSession.textContent = 'Current Session: Long Break (15 min)';
+            currentSession.textContent = 'Current Session: Long Break (30 min)';
             nextSession.textContent = 'Next: Work (25 min)';
+            updateCycleProgress(4, false, true); // Long break after 4th work session
         } else {
+            const currentWorkSession = pomodoroCount % 4 || 4; // Handle case where we're in break after 4th session
             currentSession.textContent = 'Current Session: Short Break (5 min)';
             nextSession.textContent = 'Next: Work (25 min)';
+            updateCycleProgress(currentWorkSession, false, false);
         }
+    }
+}
+
+function updateCycleProgress(workSession, isWork, isLongBreak = false) {
+    // Update progress dots
+    const dots = document.querySelectorAll('.progress-dot');
+    dots.forEach((dot, index) => {
+        if (isWork && index < workSession) {
+            dot.classList.add('active');
+        } else if (!isWork && !isLongBreak && index < workSession - 1) {
+            dot.classList.add('active');
+        } else if (isLongBreak) {
+            dot.classList.add('active'); // All dots active during long break
+        } else {
+            dot.classList.remove('active');
+        }
+    });
+
+    // Update cycle info text
+    const cycleInfo = document.getElementById('cycle-info');
+    if (isWork) {
+        cycleInfo.textContent = `Cycle Progress: Work Session ${workSession} of 4`;
+    } else if (isLongBreak) {
+        cycleInfo.textContent = 'Cycle Progress: Long Break (30 min)';
+    } else {
+        cycleInfo.textContent = `Cycle Progress: Break after Work Session ${workSession}`;
     }
 }
 
@@ -142,6 +173,7 @@ function resetTimer() {
     logEvent('Timer reset');
     updateDisplay();
     updateSessionInfo();
+    updateCycleProgress(1, true); // Reset to first work session
 }
 
 function switchSession() {
@@ -149,7 +181,7 @@ function switchSession() {
     if (isWorkSession) {
         pomodoroCount++;
         if (pomodoroCount % 4 === 0) {
-            timeLeft = 15 * 60; // Long break
+            timeLeft = 30 * 60; // Long break (30 minutes)
             isLongBreak = true;
         } else {
             timeLeft = 5 * 60; // Short break
@@ -226,3 +258,4 @@ updateClearButtonState();
 
 updateDisplay();
 updateSessionInfo();
+updateCycleProgress(1, true); // Initialize to first work session

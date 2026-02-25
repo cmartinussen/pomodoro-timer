@@ -148,6 +148,36 @@ body.dark-mode #dark-mode-toggle {
     color: var(--info-color);
 }
 
+.cycle-progress {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.progress-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--info-color);
+    transition: background-color 0.3s;
+}
+
+.progress-dot.active {
+    background-color: var(--accent-color);
+}
+
+#cycle-info {
+    font-size: 0.8em;
+    color: var(--text-color);
+    margin: 0;
+}
+
 .event-log {
     margin-top: 30px;
     text-align: left;
