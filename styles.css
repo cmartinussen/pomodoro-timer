@@ -62,12 +62,12 @@ h1 {
     background: none;
     border: 2px solid var(--accent-color);
     color: var(--accent-color);
-    padding: 8px 16px;
+    padding: 6px 12px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 0.9em;
+    font-size: 0.8em;
     transition: all 0.3s ease;
-    min-width: 70px;
+    min-width: 60px;
 }
 
 #dark-mode-toggle:hover {
