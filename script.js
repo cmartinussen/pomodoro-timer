@@ -68,10 +68,14 @@ function toggleTimer() {
         // Pause the timer
         clearInterval(timer);
         isRunning = false;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        logEvent(`Timer paused with ${minutes}:${seconds.toString().padStart(2, '0')} remaining`);
         toggleButton.textContent = 'Resume';
     } else {
         // Start the timer
         isRunning = true;
+        logEvent('Timer started');
         toggleButton.textContent = 'Pause';
         timer = setInterval(() => {
             timeLeft--;
@@ -95,6 +99,7 @@ function resetTimer() {
     pomodoroCount = 0;
     isLongBreak = false;
     toggleButton.textContent = 'Start';
+    logEvent('Timer reset');
     updateDisplay();
     updateSessionInfo();
     eventList.innerHTML = '';
@@ -148,6 +153,7 @@ function toggleDarkMode() {
     const isDark = document.body.classList.contains('dark-mode');
     darkModeToggle.textContent = isDark ? 'Light' : 'Dark';
     localStorage.setItem('darkMode', isDark);
+    logEvent(`Switched to ${isDark ? 'dark' : 'light'} mode`);
 }
 
 // Load dark mode preference
