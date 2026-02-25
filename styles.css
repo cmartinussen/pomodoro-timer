@@ -55,7 +55,7 @@ header {
 
 h1 {
     color: var(--text-color);
-    margin: 0;
+    margin: 0 20px 0 0;
 }
 
 #dark-mode-toggle {
@@ -101,22 +101,14 @@ body.dark-mode #dark-mode-toggle {
     transition: background-color 0.3s;
 }
 
-#start {
+#toggle {
     background-color: var(--button-bg);
     color: white;
+    width: 100px; /* Fixed width to accommodate "Resume" */
 }
 
-#start:hover {
+#toggle:hover {
     background-color: var(--button-hover);
-}
-
-#pause {
-    background-color: var(--pause-bg);
-    color: black;
-}
-
-#pause:hover {
-    background-color: var(--pause-hover);
 }
 
 #reset {
