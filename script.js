@@ -169,7 +169,7 @@ function updateCycleProgress(workSession, isWork, isLongBreak = false) {
     dots.forEach((dot, index) => {
         if (isWork && index < workSession) {
             dot.classList.add('active');
-        } else if (!isWork && !isLongBreak && index < workSession - 1) {
+        } else if (!isWork && !isLongBreak && index < workSession) {
             dot.classList.add('active');
         } else if (isLongBreak) {
             dot.classList.add('active'); // All dots active during long break

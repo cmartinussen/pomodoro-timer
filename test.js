@@ -226,6 +226,23 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       expect(nextSession.textContent).toContain('Short Break');
     });
 
+    test('cycle dots reflect completed work sessions during short breaks', () => {
+      const getActiveDots = (workSession, isWork, isLongBreak = false) => {
+        const active = [];
+        for (let index = 0; index < 4; index++) {
+          if ((isWork && index < workSession) || (!isWork && !isLongBreak && index < workSession) || isLongBreak) {
+            active.push(index + 1);
+          }
+        }
+        return active;
+      };
+
+      expect(getActiveDots(1, false, false)).toEqual([1]);
+      expect(getActiveDots(2, false, false)).toEqual([1, 2]);
+      expect(getActiveDots(3, false, false)).toEqual([1, 2, 3]);
+      expect(getActiveDots(4, false, true)).toEqual([1, 2, 3, 4]);
+    });
+
     test('pomodoro cycle logic', () => {
       // Test the 4-work-session + long break cycle
       let pomodoroCount = 0;
