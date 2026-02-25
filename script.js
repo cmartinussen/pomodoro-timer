@@ -369,10 +369,10 @@ resetSettingsButton.addEventListener('click', () => {
 
 // Load settings and initialize
 loadSettings();
+updateTimerFromSettings();
 
 // Initialize clear button state
 updateClearButtonState();
 
-updateDisplay();
 updateSessionInfo();
 updateCycleProgress(1, true); // Initialize to first work session
