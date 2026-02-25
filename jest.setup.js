@@ -1,10 +1,10 @@
 // jest.setup.js
-const { JSDOM } = require('jsdom');
-
 // Add TextEncoder/TextDecoder polyfills for JSDOM
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
   url: 'http://localhost'
