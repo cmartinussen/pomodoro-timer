@@ -5,6 +5,8 @@ let pomodoroCount = 0;
 let isLongBreak = false;
 let timerEndTime = null; // Track when the timer should end
 let autoContinue = true; // Auto-continue to next session (default on)
+let audioContext = null;
+let audioUnlocked = false;
 
 // Settings variables
 let settings = {
@@ -97,22 +99,52 @@ function closeSettingsModal() {
     settingsModal.style.display = 'none';
 }
 
+function initAudioContext() {
+    if (!audioContext) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+            audioContext = new AudioContextClass();
+        }
+    }
+    return audioContext;
+}
+
+function unlockAudioContext() {
+    const context = initAudioContext();
+    if (!context) {
+        return;
+    }
+
+    if (context.state === 'suspended') {
+        context.resume().catch(() => {});
+    }
+    audioUnlocked = true;
+}
+
 function playBeep() {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    const context = initAudioContext();
+    if (!context) {
+        return;
+    }
+
+    if (context.state === 'suspended') {
+        context.resume().catch(() => {});
+    }
+
+    const oscillator = context.createOscillator();
+    const gainNode = context.createGain();
 
     oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(context.destination);
 
-    oscillator.frequency.setValueAtTime(800, audioContext.currentTime); // Frequency in Hz
+    oscillator.frequency.setValueAtTime(800, context.currentTime); // Frequency in Hz
     oscillator.type = 'sine';
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+    gainNode.gain.setValueAtTime(0.3, context.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
 
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+    oscillator.start(context.currentTime);
+    oscillator.stop(context.currentTime + 0.5);
 }
 
 function logEvent(message) {
@@ -204,6 +236,9 @@ function toggleTimer() {
         toggleButton.textContent = 'Resume';
     } else {
         // Start or resume the timer
+        if (!audioUnlocked) {
+            unlockAudioContext();
+        }
         isRunning = true;
         const wasPaused = toggleButton.textContent === 'Resume';
         logEvent(wasPaused ? 'Timer resumed' : 'Timer started');
@@ -332,6 +367,11 @@ autoContinueToggle.addEventListener('change', (e) => {
     localStorage.setItem('autoContinue', autoContinue);
     logEvent(`Auto-continue ${autoContinue ? 'enabled' : 'disabled'}`);
 });
+
+// Safari requires audio to be unlocked by a user gesture.
+document.addEventListener('click', unlockAudioContext, { once: true });
+document.addEventListener('touchstart', unlockAudioContext, { once: true });
+document.addEventListener('keydown', unlockAudioContext, { once: true });
 
 // Settings modal event listeners
 settingsToggle.addEventListener('click', openSettingsModal);
