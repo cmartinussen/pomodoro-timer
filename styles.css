@@ -130,7 +130,7 @@ body.dark-mode #dark-mode-toggle {
 .event-log {
     margin-top: 30px;
     text-align: left;
-    max-height: 200px;
+    height: 200px; /* Fixed height instead of max-height for consistent spacing */
     overflow-y: auto;
     border: 1px solid var(--info-color);
     padding: 10px;
