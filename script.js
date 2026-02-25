@@ -5,6 +5,7 @@ let pomodoroCount = 0;
 let isLongBreak = false;
 let timerEndTime = null; // Track when the timer should end
 let autoContinue = true; // Auto-continue to next session (default on)
+let soundEnabled = true; // Sound notifications (default on)
 let audioContext = null;
 let audioUnlocked = false;
 
@@ -34,6 +35,7 @@ const resetSettingsButton = document.getElementById('reset-settings');
 const workDurationInput = document.getElementById('work-duration');
 const shortBreakDurationInput = document.getElementById('short-break-duration');
 const longBreakDurationInput = document.getElementById('long-break-duration');
+const soundEnabledToggle = document.getElementById('sound-enabled-toggle');
 
 // Settings functions
 function loadSettings() {
@@ -115,16 +117,35 @@ function unlockAudioContext() {
         return;
     }
 
+    const markUnlocked = () => {
+        if (context.state === 'running') {
+            // Prime the graph with a silent oscillator; Safari often needs this.
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            gainNode.gain.setValueAtTime(0, context.currentTime);
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            oscillator.start(context.currentTime);
+            oscillator.stop(context.currentTime + 0.01);
+            audioUnlocked = true;
+        }
+    };
+
     if (context.state === 'suspended') {
-        context.resume().catch(() => {});
+        context.resume().then(markUnlocked).catch(() => {});
+    } else {
+        markUnlocked();
     }
-    audioUnlocked = true;
 }
 
 function playBeep() {
+    if (!soundEnabled) {
+        return false;
+    }
+
     const context = initAudioContext();
     if (!context) {
-        return;
+        return false;
     }
 
     if (context.state === 'suspended') {
@@ -145,6 +166,7 @@ function playBeep() {
 
     oscillator.start(context.currentTime);
     oscillator.stop(context.currentTime + 0.5);
+    return true;
 }
 
 function logEvent(message) {
@@ -314,7 +336,7 @@ function switchSession() {
 }
 
 function notifyUser() {
-    playBeep();
+    const didPlaySound = playBeep();
     const message = isWorkSession ? 'Work session complete! Time for a break.' : (isLongBreak ? 'Long break over! Back to work.' : 'Short break over! Back to work.');
     if (Notification.permission === 'granted') {
         new Notification('Pomodoro Timer', {
@@ -331,7 +353,15 @@ function notifyUser() {
             }
         });
     }
-    alert(message);
+
+    if (didPlaySound) {
+        // Give Safari a moment to start audio before opening a blocking alert.
+        setTimeout(() => {
+            alert(message);
+        }, 550);
+    } else {
+        alert(message);
+    }
 }
 
 function toggleDarkMode() {
@@ -358,6 +388,12 @@ if (savedAutoContinue !== null) {
 }
 autoContinueToggle.checked = autoContinue;
 
+const savedSoundEnabled = localStorage.getItem('soundEnabled');
+if (savedSoundEnabled !== null) {
+    soundEnabled = savedSoundEnabled === 'true';
+}
+soundEnabledToggle.checked = soundEnabled;
+
 toggleButton.addEventListener('click', toggleTimer);
 resetButton.addEventListener('click', resetTimer);
 darkModeToggle.addEventListener('click', toggleDarkMode);
@@ -366,6 +402,12 @@ autoContinueToggle.addEventListener('change', (e) => {
     autoContinue = e.target.checked;
     localStorage.setItem('autoContinue', autoContinue);
     logEvent(`Auto-continue ${autoContinue ? 'enabled' : 'disabled'}`);
+});
+
+soundEnabledToggle.addEventListener('change', (e) => {
+    soundEnabled = e.target.checked;
+    localStorage.setItem('soundEnabled', soundEnabled);
+    logEvent(`Sound notifications ${soundEnabled ? 'enabled' : 'disabled'}`);
 });
 
 // Safari requires audio to be unlocked by a user gesture.
@@ -416,5 +458,4 @@ updateSessionInfo();
 // Initialize clear button state
 updateClearButtonState();
 
-updateSessionInfo();
 updateCycleProgress(1, true); // Initialize to first work session
