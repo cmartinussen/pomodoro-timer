@@ -369,7 +369,9 @@ resetSettingsButton.addEventListener('click', () => {
 
 // Load settings and initialize
 loadSettings();
-updateTimerFromSettings();
+timeLeft = settings.workDuration * 60;
+updateDisplay();
+updateSessionInfo();
 
 // Initialize clear button state
 updateClearButtonState();
