@@ -108,19 +108,16 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
   describe('UI Interactions', () => {
     test('button elements creation', () => {
       document.body.innerHTML = `
-        <button id="start">Start</button>
-        <button id="pause">Pause</button>
+        <button id="toggle">Start</button>
         <button id="reset">Reset</button>
       `;
 
-      const startBtn = document.getElementById('start');
-      const pauseBtn = document.getElementById('pause');
+      const toggleBtn = document.getElementById('toggle');
       const resetBtn = document.getElementById('reset');
 
-      expect(startBtn).toBeTruthy();
-      expect(pauseBtn).toBeTruthy();
+      expect(toggleBtn).toBeTruthy();
       expect(resetBtn).toBeTruthy();
-      expect(startBtn.textContent).toBe('Start');
+      expect(toggleBtn.textContent).toBe('Start');
     });
 
     test('display elements creation', () => {

@@ -7,8 +7,7 @@ let isLongBreak = false;
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
-const startButton = document.getElementById('start');
-const pauseButton = document.getElementById('pause');
+const toggleButton = document.getElementById('toggle');
 const resetButton = document.getElementById('reset');
 const currentSession = document.getElementById('current-session');
 const nextSession = document.getElementById('next-session');
@@ -64,25 +63,28 @@ function updateSessionInfo() {
     }
 }
 
-function startTimer() {
-    if (!isRunning) {
+function toggleTimer() {
+    if (isRunning) {
+        // Pause the timer
+        clearInterval(timer);
+        isRunning = false;
+        toggleButton.textContent = 'Resume';
+    } else {
+        // Start the timer
         isRunning = true;
+        toggleButton.textContent = 'Pause';
         timer = setInterval(() => {
             timeLeft--;
             updateDisplay();
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 isRunning = false;
+                toggleButton.textContent = 'Start';
                 notifyUser();
                 switchSession();
             }
         }, 1000);
     }
-}
-
-function pauseTimer() {
-    clearInterval(timer);
-    isRunning = false;
 }
 
 function resetTimer() {
@@ -92,6 +94,7 @@ function resetTimer() {
     isWorkSession = true;
     pomodoroCount = 0;
     isLongBreak = false;
+    toggleButton.textContent = 'Start';
     updateDisplay();
     updateSessionInfo();
     eventList.innerHTML = '';
@@ -156,8 +159,7 @@ if (savedDarkMode === 'true') {
     darkModeToggle.textContent = 'Dark';
 }
 
-startButton.addEventListener('click', startTimer);
-pauseButton.addEventListener('click', pauseTimer);
+toggleButton.addEventListener('click', toggleTimer);
 resetButton.addEventListener('click', resetTimer);
 darkModeToggle.addEventListener('click', toggleDarkMode);
 
