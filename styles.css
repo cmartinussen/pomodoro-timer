@@ -104,7 +104,7 @@ body.dark-mode #dark-mode-toggle {
 #toggle {
     background-color: var(--button-bg);
     color: white;
-    width: 100px; /* Fixed width to accommodate "Resume" */
+    width: 120px; /* Increased width for better text centering */
     text-align: center;
 }
 

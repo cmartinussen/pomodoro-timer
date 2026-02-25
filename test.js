@@ -142,19 +142,19 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       document.body.innerHTML = '<ul id="event-list"></ul>';
       const eventList = document.getElementById('event-list');
 
-      // Simulate adding events
+      // Simulate adding events (new events go to top)
       const addEvent = (message) => {
         const li = document.createElement('li');
         li.textContent = `12:00:00: ${message}`;
-        eventList.appendChild(li);
+        eventList.insertBefore(li, eventList.firstChild);
       };
 
       addEvent('Work session completed');
       addEvent('Short break started');
 
       expect(eventList.children.length).toBe(2);
-      expect(eventList.children[0].textContent).toContain('Work session completed');
-      expect(eventList.children[1].textContent).toContain('Short break started');
+      expect(eventList.children[0].textContent).toContain('Short break started');
+      expect(eventList.children[1].textContent).toContain('Work session completed');
     });
   });
 

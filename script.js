@@ -37,8 +37,7 @@ function logEvent(message) {
     const timeString = now.toLocaleTimeString();
     const li = document.createElement('li');
     li.textContent = `${timeString}: ${message}`;
-    eventList.appendChild(li);
-    eventList.scrollTop = eventList.scrollHeight; // Auto-scroll to bottom
+    eventList.insertBefore(li, eventList.firstChild); // Add to top instead of bottom
 }
 
 function updateDisplay() {
@@ -102,7 +101,6 @@ function resetTimer() {
     logEvent('Timer reset');
     updateDisplay();
     updateSessionInfo();
-    eventList.innerHTML = '';
 }
 
 function switchSession() {
