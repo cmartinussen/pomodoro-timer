@@ -4,7 +4,7 @@ let isWorkSession = true;
 let pomodoroCount = 0;
 let isLongBreak = false;
 let timerEndTime = null; // Track when the timer should end
-let autoContinue = false; // Auto-continue to next session
+let autoContinue = true; // Auto-continue to next session (default on)
 
 // Settings variables
 let settings = {
@@ -318,8 +318,8 @@ if (savedDarkMode === 'true') {
 
 // Load auto-continue preference
 const savedAutoContinue = localStorage.getItem('autoContinue');
-if (savedAutoContinue === 'true') {
-    autoContinue = true;
+if (savedAutoContinue !== null) {
+    autoContinue = savedAutoContinue === 'true';
 }
 autoContinueToggle.checked = autoContinue;
 
