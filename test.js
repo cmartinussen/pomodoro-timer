@@ -276,6 +276,8 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       }).not.toThrow();
     });
   });
+
+  describe('Timer State Management', () => {
     test('initial timer state', () => {
       const initialState = {
         timeLeft: 25 * 60,
