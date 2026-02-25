@@ -1,6 +1,5 @@
 let timer;
 let isRunning = false;
-let timeLeft = settings.workDuration * 60; // Use settings for initial work duration
 let isWorkSession = true;
 let pomodoroCount = 0;
 let isLongBreak = false;
@@ -13,6 +12,7 @@ let settings = {
     shortBreakDuration: 5,
     longBreakDuration: 30
 };
+let timeLeft = settings.workDuration * 60; // Use settings for initial work duration
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
@@ -24,12 +24,33 @@ const darkModeToggle = document.getElementById('dark-mode-toggle');
 const eventList = document.getElementById('event-list');
 const clearLogButton = document.getElementById('clear-log');
 const autoContinueToggle = document.getElementById('auto-continue-toggle');
+const settingsToggle = document.getElementById('settings-toggle');
+const settingsModal = document.getElementById('settings-modal');
+const closeSettings = document.getElementById('close-settings');
+const saveSettingsButton = document.getElementById('save-settings');
+const resetSettingsButton = document.getElementById('reset-settings');
+const workDurationInput = document.getElementById('work-duration');
+const shortBreakDurationInput = document.getElementById('short-break-duration');
+const longBreakDurationInput = document.getElementById('long-break-duration');
 
 // Settings functions
 function loadSettings() {
     const savedSettings = localStorage.getItem('pomodoroSettings');
     if (savedSettings) {
-        settings = JSON.parse(savedSettings);
+        try {
+            const parsedSettings = JSON.parse(savedSettings);
+            settings = {
+                workDuration: Number(parsedSettings.workDuration) || 25,
+                shortBreakDuration: Number(parsedSettings.shortBreakDuration) || 5,
+                longBreakDuration: Number(parsedSettings.longBreakDuration) || 30
+            };
+        } catch {
+            settings = {
+                workDuration: 25,
+                shortBreakDuration: 5,
+                longBreakDuration: 30
+            };
+        }
     }
     // Update input values
     workDurationInput.value = settings.workDuration;
@@ -299,8 +320,8 @@ if (savedDarkMode === 'true') {
 const savedAutoContinue = localStorage.getItem('autoContinue');
 if (savedAutoContinue === 'true') {
     autoContinue = true;
-    autoContinueToggle.checked = true;
 }
+autoContinueToggle.checked = autoContinue;
 
 toggleButton.addEventListener('click', toggleTimer);
 resetButton.addEventListener('click', resetTimer);
@@ -324,9 +345,17 @@ settingsModal.addEventListener('click', (e) => {
 });
 
 saveSettingsButton.addEventListener('click', () => {
-    settings.workDuration = parseInt(workDurationInput.value);
-    settings.shortBreakDuration = parseInt(shortBreakDurationInput.value);
-    settings.longBreakDuration = parseInt(longBreakDurationInput.value);
+    const workDuration = parseInt(workDurationInput.value, 10);
+    const shortBreakDuration = parseInt(shortBreakDurationInput.value, 10);
+    const longBreakDuration = parseInt(longBreakDurationInput.value, 10);
+
+    settings.workDuration = Number.isFinite(workDuration) && workDuration > 0 ? workDuration : 25;
+    settings.shortBreakDuration = Number.isFinite(shortBreakDuration) && shortBreakDuration > 0 ? shortBreakDuration : 5;
+    settings.longBreakDuration = Number.isFinite(longBreakDuration) && longBreakDuration > 0 ? longBreakDuration : 30;
+
+    workDurationInput.value = settings.workDuration;
+    shortBreakDurationInput.value = settings.shortBreakDuration;
+    longBreakDurationInput.value = settings.longBreakDuration;
     saveSettings();
     updateTimerFromSettings();
     closeSettingsModal();
