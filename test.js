@@ -178,7 +178,7 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       localStorage.setItem('test', 'value');
       expect(localStorage.getItem('test')).toBe('value');
       localStorage.removeItem('test');
-      expect(localStorage.getItem('test')).toBeUndefined();
+      expect(localStorage.getItem('test')).toBeNull();
     });
   });
 
