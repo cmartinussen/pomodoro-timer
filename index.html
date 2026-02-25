@@ -11,18 +11,23 @@
     <div class="container">
         <header>
             <h1>Pomodoro Timer</h1>
-            <button id="dark-mode-toggle">🌙</button>
+            <div class="header-buttons">
+                <button id="settings-toggle">⚙️</button>
+                <button id="dark-mode-toggle">🌙</button>
+            </div>
         </header>
         <div class="timer">
             <div class="time-display">
                 <span id="minutes">25</span>:<span id="seconds">00</span>
             </div>
             <div class="controls">
-                <button id="toggle">Start</button>
-                <button id="reset">Reset</button>
+                <div class="button-row">
+                    <button id="toggle">Start</button>
+                    <button id="reset">Reset</button>
+                </div>
                 <div class="control-options">
                     <label for="auto-continue-toggle" class="auto-continue-label">
-                        <input type="checkbox" id="auto-continue-toggle">
+                        <input type="checkbox" id="auto-continue-toggle" checked>
                         <span>Auto-continue</span>
                     </label>
                 </div>
@@ -51,6 +56,35 @@
             <ul id="event-list"></ul>
         </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Timer Settings</h2>
+                <button id="close-settings">×</button>
+            </div>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <label for="work-duration">Work Duration (minutes):</label>
+                    <input type="number" id="work-duration" min="1" max="60" value="25">
+                </div>
+                <div class="setting-group">
+                    <label for="short-break-duration">Short Break Duration (minutes):</label>
+                    <input type="number" id="short-break-duration" min="1" max="30" value="5">
+                </div>
+                <div class="setting-group">
+                    <label for="long-break-duration">Long Break Duration (minutes):</label>
+                    <input type="number" id="long-break-duration" min="1" max="60" value="30">
+                </div>
+                <div class="settings-actions">
+                    <button id="save-settings">Save Settings</button>
+                    <button id="reset-settings">Reset to Defaults</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

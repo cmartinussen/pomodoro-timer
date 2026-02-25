@@ -1,11 +1,18 @@
 let timer;
 let isRunning = false;
-let timeLeft = 25 * 60; // 25 minutes in seconds
+let timeLeft = settings.workDuration * 60; // Use settings for initial work duration
 let isWorkSession = true;
 let pomodoroCount = 0;
 let isLongBreak = false;
 let timerEndTime = null; // Track when the timer should end
 let autoContinue = false; // Auto-continue to next session
+
+// Settings variables
+let settings = {
+    workDuration: 25,
+    shortBreakDuration: 5,
+    longBreakDuration: 30
+};
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
@@ -17,6 +24,57 @@ const darkModeToggle = document.getElementById('dark-mode-toggle');
 const eventList = document.getElementById('event-list');
 const clearLogButton = document.getElementById('clear-log');
 const autoContinueToggle = document.getElementById('auto-continue-toggle');
+
+// Settings functions
+function loadSettings() {
+    const savedSettings = localStorage.getItem('pomodoroSettings');
+    if (savedSettings) {
+        settings = JSON.parse(savedSettings);
+    }
+    // Update input values
+    workDurationInput.value = settings.workDuration;
+    shortBreakDurationInput.value = settings.shortBreakDuration;
+    longBreakDurationInput.value = settings.longBreakDuration;
+}
+
+function saveSettings() {
+    localStorage.setItem('pomodoroSettings', JSON.stringify(settings));
+    logEvent('Settings saved');
+}
+
+function resetSettings() {
+    settings = {
+        workDuration: 25,
+        shortBreakDuration: 5,
+        longBreakDuration: 30
+    };
+    workDurationInput.value = settings.workDuration;
+    shortBreakDurationInput.value = settings.shortBreakDuration;
+    longBreakDurationInput.value = settings.longBreakDuration;
+    saveSettings();
+    logEvent('Settings reset to defaults');
+}
+
+function updateTimerFromSettings() {
+    if (isWorkSession && !isLongBreak) {
+        timeLeft = settings.workDuration * 60;
+    } else if (isLongBreak) {
+        timeLeft = settings.longBreakDuration * 60;
+    } else {
+        timeLeft = settings.shortBreakDuration * 60;
+    }
+    updateDisplay();
+    updateSessionInfo();
+}
+
+// Modal functions
+function openSettingsModal() {
+    settingsModal.style.display = 'block';
+}
+
+function closeSettingsModal() {
+    settingsModal.style.display = 'none';
+}
 
 function playBeep() {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -67,18 +125,18 @@ function updateDisplay() {
 function updateSessionInfo() {
     if (isWorkSession) {
         const currentWorkSession = (pomodoroCount % 4) + 1;
-        currentSession.textContent = `Current Session: Work (25 min)`;
-        nextSession.textContent = pomodoroCount % 4 === 3 ? 'Next: Long Break (30 min)' : 'Next: Short Break (5 min)';
+        currentSession.textContent = `Current Session: Work (${settings.workDuration} min)`;
+        nextSession.textContent = pomodoroCount % 4 === 3 ? `Next: Long Break (${settings.longBreakDuration} min)` : `Next: Short Break (${settings.shortBreakDuration} min)`;
         updateCycleProgress(currentWorkSession, true);
     } else {
         if (isLongBreak) {
-            currentSession.textContent = 'Current Session: Long Break (30 min)';
-            nextSession.textContent = 'Next: Work (25 min)';
+            currentSession.textContent = `Current Session: Long Break (${settings.longBreakDuration} min)`;
+            nextSession.textContent = `Next: Work (${settings.workDuration} min)`;
             updateCycleProgress(4, false, true); // Long break after 4th work session
         } else {
             const currentWorkSession = pomodoroCount % 4 || 4; // Handle case where we're in break after 4th session
-            currentSession.textContent = 'Current Session: Short Break (5 min)';
-            nextSession.textContent = 'Next: Work (25 min)';
+            currentSession.textContent = `Current Session: Short Break (${settings.shortBreakDuration} min)`;
+            nextSession.textContent = `Next: Work (${settings.workDuration} min)`;
             updateCycleProgress(currentWorkSession, false, false);
         }
     }
@@ -104,7 +162,7 @@ function updateCycleProgress(workSession, isWork, isLongBreak = false) {
     if (isWork) {
         cycleInfo.textContent = `Cycle Progress: Work Session ${workSession} of 4`;
     } else if (isLongBreak) {
-        cycleInfo.textContent = 'Cycle Progress: Long Break (30 min)';
+        cycleInfo.textContent = `Cycle Progress: Long Break (${settings.longBreakDuration} min)`;
     } else {
         cycleInfo.textContent = `Cycle Progress: Break after Work Session ${workSession}`;
     }
@@ -166,7 +224,7 @@ function resetTimer() {
     clearInterval(timer);
     isRunning = false;
     timerEndTime = null;
-    timeLeft = 25 * 60;
+    timeLeft = settings.workDuration * 60;
     isWorkSession = true;
     pomodoroCount = 0;
     isLongBreak = false;
@@ -182,15 +240,15 @@ function switchSession() {
     if (isWorkSession) {
         pomodoroCount++;
         if (pomodoroCount % 4 === 0) {
-            timeLeft = 30 * 60; // Long break (30 minutes)
+            timeLeft = settings.longBreakDuration * 60; // Long break
             isLongBreak = true;
         } else {
-            timeLeft = 5 * 60; // Short break
+            timeLeft = settings.shortBreakDuration * 60; // Short break
             isLongBreak = false;
         }
         isWorkSession = false;
     } else {
-        timeLeft = 25 * 60; // Back to work
+        timeLeft = settings.workDuration * 60; // Back to work
         isWorkSession = true;
         isLongBreak = false;
     }
@@ -223,7 +281,7 @@ function notifyUser() {
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDark = document.body.classList.contains('dark-mode');
-    darkModeToggle.textContent = isDark ? 'Light' : 'Dark';
+    darkModeToggle.textContent = isDark ? '☀️' : '🌙';
     localStorage.setItem('darkMode', isDark);
     logEvent(`Switched to ${isDark ? 'dark' : 'light'} mode`);
 }
@@ -232,9 +290,9 @@ function toggleDarkMode() {
 const savedDarkMode = localStorage.getItem('darkMode');
 if (savedDarkMode === 'true') {
     document.body.classList.add('dark-mode');
-    darkModeToggle.textContent = 'Light';
+    darkModeToggle.textContent = '☀️';
 } else {
-    darkModeToggle.textContent = 'Dark';
+    darkModeToggle.textContent = '🌙';
 }
 
 // Load auto-continue preference
@@ -253,6 +311,35 @@ autoContinueToggle.addEventListener('change', (e) => {
     localStorage.setItem('autoContinue', autoContinue);
     logEvent(`Auto-continue ${autoContinue ? 'enabled' : 'disabled'}`);
 });
+
+// Settings modal event listeners
+settingsToggle.addEventListener('click', openSettingsModal);
+closeSettings.addEventListener('click', closeSettingsModal);
+
+// Close modal when clicking outside
+settingsModal.addEventListener('click', (e) => {
+    if (e.target === settingsModal) {
+        closeSettingsModal();
+    }
+});
+
+saveSettingsButton.addEventListener('click', () => {
+    settings.workDuration = parseInt(workDurationInput.value);
+    settings.shortBreakDuration = parseInt(shortBreakDurationInput.value);
+    settings.longBreakDuration = parseInt(longBreakDurationInput.value);
+    saveSettings();
+    updateTimerFromSettings();
+    closeSettingsModal();
+});
+
+resetSettingsButton.addEventListener('click', () => {
+    resetSettings();
+    updateTimerFromSettings();
+    closeSettingsModal();
+});
+
+// Load settings and initialize
+loadSettings();
 
 // Initialize clear button state
 updateClearButtonState();
