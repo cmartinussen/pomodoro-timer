@@ -13,6 +13,7 @@ const currentSession = document.getElementById('current-session');
 const nextSession = document.getElementById('next-session');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const eventList = document.getElementById('event-list');
+const clearLogButton = document.getElementById('clear-log');
 
 function playBeep() {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -38,9 +39,20 @@ function logEvent(message) {
     const li = document.createElement('li');
     li.textContent = `${timeString}: ${message}`;
     eventList.insertBefore(li, eventList.firstChild); // Add to top instead of bottom
+    updateClearButtonState();
 }
 
-function updateDisplay() {
+function updateClearButtonState() {
+    clearLogButton.disabled = eventList.children.length === 0;
+}
+
+function clearLog() {
+    if (eventList.children.length > 0) {
+        logEvent('Event log cleared');
+        eventList.innerHTML = '';
+        updateClearButtonState();
+    }
+}
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     minutesDisplay.textContent = minutes.toString().padStart(2, '0');
@@ -166,6 +178,10 @@ if (savedDarkMode === 'true') {
 toggleButton.addEventListener('click', toggleTimer);
 resetButton.addEventListener('click', resetTimer);
 darkModeToggle.addEventListener('click', toggleDarkMode);
+clearLogButton.addEventListener('click', clearLog);
+
+// Initialize clear button state
+updateClearButtonState();
 
 updateDisplay();
 updateSessionInfo();
