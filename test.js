@@ -160,15 +160,18 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
         <button id="toggle">Start</button>
         <button id="reset">Reset</button>
         <button id="clear-log" disabled>Clear</button>
+        <input type="checkbox" id="auto-continue-toggle">
       `;
 
       const toggleBtn = document.getElementById('toggle');
       const resetBtn = document.getElementById('reset');
       const clearBtn = document.getElementById('clear-log');
+      const autoContinueCheckbox = document.getElementById('auto-continue-toggle');
 
       expect(toggleBtn).toBeTruthy();
       expect(resetBtn).toBeTruthy();
       expect(clearBtn).toBeTruthy();
+      expect(autoContinueCheckbox).toBeTruthy();
       expect(toggleBtn.textContent).toBe('Start');
       expect(clearBtn.disabled).toBe(true); // Should start disabled
     });

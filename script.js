@@ -5,6 +5,7 @@ let isWorkSession = true;
 let pomodoroCount = 0;
 let isLongBreak = false;
 let timerEndTime = null; // Track when the timer should end
+let autoContinue = false; // Auto-continue to next session
 
 const minutesDisplay = document.getElementById('minutes');
 const secondsDisplay = document.getElementById('seconds');
@@ -15,6 +16,7 @@ const nextSession = document.getElementById('next-session');
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const eventList = document.getElementById('event-list');
 const clearLogButton = document.getElementById('clear-log');
+const autoContinueToggle = document.getElementById('auto-continue-toggle');
 
 function playBeep() {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -111,9 +113,18 @@ function toggleTimer() {
                 clearInterval(timer);
                 isRunning = false;
                 timerEndTime = null;
-                toggleButton.textContent = 'Start';
                 notifyUser();
                 switchSession();
+
+                if (autoContinue) {
+                    // Automatically start the next session
+                    logEvent('Auto-continuing to next session');
+                    setTimeout(() => {
+                        toggleTimer(); // Start the next timer automatically
+                    }, 1000); // Small delay for user feedback
+                } else {
+                    toggleButton.textContent = 'Start';
+                }
             }
         }, 100); // Check more frequently (every 100ms) for better accuracy
     }
@@ -193,10 +204,22 @@ if (savedDarkMode === 'true') {
     darkModeToggle.textContent = 'Dark';
 }
 
+// Load auto-continue preference
+const savedAutoContinue = localStorage.getItem('autoContinue');
+if (savedAutoContinue === 'true') {
+    autoContinue = true;
+    autoContinueToggle.checked = true;
+}
+
 toggleButton.addEventListener('click', toggleTimer);
 resetButton.addEventListener('click', resetTimer);
 darkModeToggle.addEventListener('click', toggleDarkMode);
 clearLogButton.addEventListener('click', clearLog);
+autoContinueToggle.addEventListener('change', (e) => {
+    autoContinue = e.target.checked;
+    localStorage.setItem('autoContinue', autoContinue);
+    logEvent(`Auto-continue ${autoContinue ? 'enabled' : 'disabled'}`);
+});
 
 // Initialize clear button state
 updateClearButtonState();

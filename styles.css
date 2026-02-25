@@ -121,6 +121,27 @@ body.dark-mode #dark-mode-toggle {
     background-color: var(--reset-hover);
 }
 
+.auto-continue {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.auto-continue label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.auto-continue input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 .session-info {
     margin-top: 20px;
     font-size: 0.9em;
