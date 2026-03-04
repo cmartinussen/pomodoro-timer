@@ -50,6 +50,9 @@ const shortBreakDurationInput = document.getElementById('short-break-duration');
 const longBreakDurationInput = document.getElementById('long-break-duration');
 const soundEnabledToggle = document.getElementById('sound-enabled-toggle');
 const popupAlertsToggle = document.getElementById('popup-alerts-toggle');
+const sessionVisual = document.getElementById('session-visual');
+const sessionIcon = document.getElementById('session-icon');
+const sessionLabel = document.getElementById('session-label');
 
 // Settings functions
 function loadSettings() {
@@ -216,21 +219,46 @@ function updateDisplay() {
     secondsDisplay.textContent = seconds.toString().padStart(2, '0');
 }
 
+function updateSessionVisual(sessionType) {
+    if (!sessionVisual || !sessionIcon || !sessionLabel) {
+        return;
+    }
+
+    sessionVisual.classList.remove('work', 'short-break', 'long-break');
+
+    if (sessionType === 'work') {
+        sessionVisual.classList.add('work');
+        sessionIcon.textContent = '💼';
+        sessionLabel.textContent = 'Work Focus';
+    } else if (sessionType === 'long-break') {
+        sessionVisual.classList.add('long-break');
+        sessionIcon.textContent = '🌴';
+        sessionLabel.textContent = 'Long Break';
+    } else {
+        sessionVisual.classList.add('short-break');
+        sessionIcon.textContent = '☕';
+        sessionLabel.textContent = 'Short Break';
+    }
+}
+
 function updateSessionInfo() {
     if (isWorkSession) {
         const currentWorkSession = (pomodoroCount % 4) + 1;
         currentSession.textContent = `Current Session: Work (${settings.workDuration} min)`;
         nextSession.textContent = pomodoroCount % 4 === 3 ? `Next: Long Break (${settings.longBreakDuration} min)` : `Next: Short Break (${settings.shortBreakDuration} min)`;
+        updateSessionVisual('work');
         updateCycleProgress(currentWorkSession, true);
     } else {
         if (isLongBreak) {
             currentSession.textContent = `Current Session: Long Break (${settings.longBreakDuration} min)`;
             nextSession.textContent = `Next: Work (${settings.workDuration} min)`;
+            updateSessionVisual('long-break');
             updateCycleProgress(4, false, true); // Long break after 4th work session
         } else {
             const currentWorkSession = pomodoroCount % 4 || 4; // Handle case where we're in break after 4th session
             currentSession.textContent = `Current Session: Short Break (${settings.shortBreakDuration} min)`;
             nextSession.textContent = `Next: Work (${settings.workDuration} min)`;
+            updateSessionVisual('short-break');
             updateCycleProgress(currentWorkSession, false, false);
         }
     }
