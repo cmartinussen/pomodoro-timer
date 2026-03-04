@@ -9,6 +9,8 @@ A Japanese-inspired Pomodoro countdown clock built with HTML, CSS, and JavaScrip
 - 25-minute work sessions
 - 5-minute short breaks after each work session
 - 15-minute long breaks after every 4 work sessions
+- Installable as an app (PWA)
+- Offline support via service worker caching
 - Automatic switching between work and break sessions
 - Start, pause, and reset functionality
 - Dark mode toggle
@@ -65,6 +67,7 @@ This project is configured for automatic deployment to GitHub Pages:
 ## Usage
 
 1. Open the app in your web browser
+2. (Optional) Install it from your browser's install prompt/menu for app-like use
 2. Click "Start" to begin the timer
 3. Click "Pause" to pause the timer
 4. Click "Reset" to reset to a new work session
@@ -83,6 +86,12 @@ The app displays the current session and what's coming next to make the flow int
 ## Browser Notifications
 
 The app will request permission to show notifications when sessions end. If denied, it will fall back to browser alerts.
+
+## PWA / App Install
+
+- The app includes `manifest.json` and `service-worker.js`.
+- To test installability, run `npm start`, open `http://localhost:8080`, then use your browser's install option.
+- Once loaded, core assets are cached for offline use.
 
 ## Dark Mode
 

@@ -9,6 +9,18 @@ let soundEnabled = true; // Sound notifications (default on)
 let audioContext = null;
 let audioUnlocked = false;
 
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) {
+        return;
+    }
+
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {
+            logEvent('Offline support unavailable');
+        });
+    });
+}
+
 // Settings variables
 let settings = {
     workDuration: 25,
@@ -470,3 +482,5 @@ updateSessionInfo();
 updateClearButtonState();
 
 updateCycleProgress(1, true); // Initialize to first work session
+
+registerServiceWorker();

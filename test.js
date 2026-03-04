@@ -1,5 +1,8 @@
 // test.js - Comprehensive Jest tests for Pomodoro Timer
 
+const fs = require('fs');
+const path = require('path');
+
 describe('Pomodoro Timer - Comprehensive Tests', () => {
   beforeEach(() => {
     // Reset global variables for each test
@@ -406,6 +409,41 @@ describe('Pomodoro Timer - Comprehensive Tests', () => {
       expect(isWorkSession).toBe(true);
       expect(pomodoroCount).toBe(0);
       expect(isLongBreak).toBe(false);
+    });
+  });
+
+  describe('PWA Integration', () => {
+    test('index references manifest.json', () => {
+      const indexHtml = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+      expect(indexHtml).toContain('rel="manifest"');
+      expect(indexHtml).toContain('href="manifest.json"');
+    });
+
+    test('manifest has installable app metadata', () => {
+      const manifestRaw = fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf8');
+      const manifest = JSON.parse(manifestRaw);
+
+      expect(manifest.name).toBe('Pomodoro Timer');
+      expect(manifest.display).toBe('standalone');
+      expect(manifest.start_url).toBe('.');
+      expect(Array.isArray(manifest.icons)).toBe(true);
+      expect(manifest.icons.length).toBeGreaterThan(0);
+    });
+
+    test('service worker script defines cache and fetch handling', () => {
+      const serviceWorker = fs.readFileSync(path.join(__dirname, 'service-worker.js'), 'utf8');
+
+      expect(serviceWorker).toContain('CACHE_NAME');
+      expect(serviceWorker).toContain("self.addEventListener('install'");
+      expect(serviceWorker).toContain("self.addEventListener('activate'");
+      expect(serviceWorker).toContain("self.addEventListener('fetch'");
+    });
+
+    test('app script registers service worker', () => {
+      const appScript = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
+
+      expect(appScript).toContain("'serviceWorker' in navigator");
+      expect(appScript).toContain("navigator.serviceWorker.register('service-worker.js')");
     });
   });
 });
