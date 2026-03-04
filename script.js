@@ -51,6 +51,7 @@ const soundEnabledToggle = document.getElementById('sound-enabled-toggle');
 const popupAlertsToggle = document.getElementById('popup-alerts-toggle');
 const sessionVisual = document.getElementById('session-visual');
 const sessionIcon = document.getElementById('session-icon');
+const sessionLabel = document.getElementById('session-label');
 
 // Settings functions
 function loadSettings() {
@@ -218,7 +219,7 @@ function updateDisplay() {
 }
 
 function updateSessionVisual(sessionType) {
-    if (!sessionVisual || !sessionIcon) {
+    if (!sessionVisual || !sessionIcon || !sessionLabel) {
         return;
     }
 
@@ -227,12 +228,15 @@ function updateSessionVisual(sessionType) {
     if (sessionType === 'work') {
         sessionVisual.classList.add('work');
         sessionIcon.textContent = '💼';
+        sessionLabel.textContent = 'Work Focus';
     } else if (sessionType === 'long-break') {
         sessionVisual.classList.add('long-break');
         sessionIcon.textContent = '🌴';
+        sessionLabel.textContent = 'Long Break';
     } else {
         sessionVisual.classList.add('short-break');
         sessionIcon.textContent = '☕';
+        sessionLabel.textContent = 'Short Break';
     }
 }
 

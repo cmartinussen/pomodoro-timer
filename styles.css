@@ -189,6 +189,7 @@ body.dark-mode #dark-mode-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
     padding: 8px 12px;
     border: 1px solid var(--session-color);
     border-radius: 999px;
@@ -219,8 +220,15 @@ body.dark-mode #dark-mode-toggle {
 }
 
 .session-icon {
-    font-size: 1.05em;
+    font-size: 1.6em;
+    line-height: 1;
     animation: sessionFloat 2s ease-in-out infinite;
+}
+
+#session-label {
+    font-size: 0.95em;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 @keyframes sessionPulse {
