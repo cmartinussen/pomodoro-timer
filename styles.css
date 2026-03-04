@@ -188,8 +188,8 @@ body.dark-mode #dark-mode-toggle {
     --session-color: var(--accent-color);
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
+    justify-content: center;
+    padding: 8px 12px;
     border: 1px solid var(--session-color);
     border-radius: 999px;
     color: var(--session-color);
