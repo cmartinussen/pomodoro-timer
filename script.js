@@ -14,10 +14,91 @@ function registerServiceWorker() {
         return;
     }
 
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js').catch(() => {
+    window.addEventListener('load', async () => {
+        try {
+            const registration = await navigator.serviceWorker.register('service-worker.js');
+            let isRefreshing = false;
+            let pendingRegistration = null;
+
+            const hideUpdateBanner = () => {
+                if (!updateBanner) {
+                    return;
+                }
+                updateBanner.classList.remove('visible');
+                updateBanner.setAttribute('aria-hidden', 'true');
+            };
+
+            const showUpdateBanner = () => {
+                if (!updateBanner) {
+                    return;
+                }
+                updateBanner.classList.add('visible');
+                updateBanner.setAttribute('aria-hidden', 'false');
+            };
+
+            const promptUpdate = () => {
+                if (registration.waiting && navigator.serviceWorker.controller) {
+                    pendingRegistration = registration;
+                    showUpdateBanner();
+                    logEvent('New app version ready to install');
+                }
+            };
+
+            registration.addEventListener('updatefound', () => {
+                const installingWorker = registration.installing;
+                if (!installingWorker) {
+                    return;
+                }
+
+                installingWorker.addEventListener('statechange', () => {
+                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        promptUpdate();
+                    }
+                });
+            });
+
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (isRefreshing) {
+                    return;
+                }
+                isRefreshing = true;
+                hideUpdateBanner();
+                window.location.reload();
+            });
+
+            if (updateNowButton) {
+                updateNowButton.addEventListener('click', () => {
+                    const targetRegistration = pendingRegistration || registration;
+                    if (targetRegistration.waiting) {
+                        updateNowButton.disabled = true;
+                        updateNowButton.textContent = 'Updating...';
+                        targetRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                });
+            }
+
+            if (updateLaterButton) {
+                updateLaterButton.addEventListener('click', () => {
+                    hideUpdateBanner();
+                    logEvent('Update postponed');
+                });
+            }
+
+            promptUpdate();
+            registration.update().then(promptUpdate).catch(() => {});
+
+            setInterval(() => {
+                registration.update().then(promptUpdate).catch(() => {});
+            }, 60 * 60 * 1000);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    registration.update().then(promptUpdate).catch(() => {});
+                }
+            });
+        } catch {
             logEvent('Offline support unavailable');
-        });
+        }
     });
 }
 
@@ -52,6 +133,9 @@ const popupAlertsToggle = document.getElementById('popup-alerts-toggle');
 const sessionVisual = document.getElementById('session-visual');
 const sessionIcon = document.getElementById('session-icon');
 const sessionLabel = document.getElementById('session-label');
+const updateBanner = document.getElementById('update-banner');
+const updateNowButton = document.getElementById('update-now');
+const updateLaterButton = document.getElementById('update-later');
 
 // Settings functions
 function loadSettings() {

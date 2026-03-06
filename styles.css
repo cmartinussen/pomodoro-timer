@@ -475,3 +475,58 @@ body.dark-mode #dark-mode-toggle {
 .settings-actions button:hover {
     opacity: 0.9;
 }
+
+.update-banner {
+    position: fixed;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--accent-color);
+    background-color: var(--container-bg);
+    color: var(--text-color);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1100;
+}
+
+.update-banner.visible {
+    display: flex;
+}
+
+.update-message {
+    font-size: 0.9em;
+}
+
+.update-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.update-actions button {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 7px 10px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.update-primary {
+    background-color: var(--button-bg);
+    color: white;
+    border-color: var(--button-bg);
+}
+
+.update-primary:hover {
+    background-color: var(--button-hover);
+    border-color: var(--button-hover);
+}
+
+.update-secondary {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
