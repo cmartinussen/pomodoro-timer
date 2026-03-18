@@ -68,6 +68,44 @@ function New-TomatoIcon {
     }
 }
 
+function New-IcoFromPng {
+    param(
+        [string]$PngPath,
+        [string]$IcoPath
+    )
+
+    $pngBytes = [System.IO.File]::ReadAllBytes($PngPath)
+    $width = 0
+    $height = 0
+    $bitCount = 32
+    $imageSize = $pngBytes.Length
+    $headerSize = 6
+    $directoryEntrySize = 16
+    $imageOffset = $headerSize + $directoryEntrySize
+
+    $stream = [System.IO.File]::Open($IcoPath, [System.IO.FileMode]::Create, [System.IO.FileAccess]::Write)
+    $writer = New-Object System.IO.BinaryWriter $stream
+
+    try {
+        $writer.Write([UInt16]0)
+        $writer.Write([UInt16]1)
+        $writer.Write([UInt16]1)
+        $writer.Write([byte]$width)
+        $writer.Write([byte]$height)
+        $writer.Write([byte]0)
+        $writer.Write([byte]0)
+        $writer.Write([UInt16]1)
+        $writer.Write([UInt16]$bitCount)
+        $writer.Write([UInt32]$imageSize)
+        $writer.Write([UInt32]$imageOffset)
+        $writer.Write($pngBytes)
+    } finally {
+        $writer.Dispose()
+        $stream.Dispose()
+    }
+}
+
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 New-TomatoIcon -Size 192 -OutputPath (Join-Path $root 'icon-192-v2.png')
 New-TomatoIcon -Size 512 -OutputPath (Join-Path $root 'icon-512-v2.png')
+New-IcoFromPng -PngPath (Join-Path $root 'icon-192-v2.png') -IcoPath (Join-Path $root 'favicon-v2.ico')

@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
   'script.js',
   'manifest.json',
   'favicon-v2.svg',
+  'favicon-v2.ico',
   'icon-192-v2.png',
   'icon-512-v2.png'
 ];
