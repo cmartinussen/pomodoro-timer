@@ -12,6 +12,12 @@ function New-TomatoBitmap {
         $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
         $graphics.Clear([System.Drawing.Color]::Transparent)
 
+        # Slightly scale up artwork so the icon occupies more of the canvas in taskbars.
+        $iconScale = 1.08
+        $graphics.TranslateTransform($Size / 2.0, $Size / 2.0)
+        $graphics.ScaleTransform($iconScale, $iconScale)
+        $graphics.TranslateTransform(-($Size / 2.0), -($Size / 2.0))
+
         $bodyRect = New-Object System.Drawing.RectangleF ($Size * 0.07), ($Size * 0.15), ($Size * 0.86), ($Size * 0.80)
         $bodyBrush = New-Object System.Drawing.Drawing2D.LinearGradientBrush (
             [System.Drawing.PointF]::new($bodyRect.Left, $bodyRect.Top),
