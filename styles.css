@@ -657,3 +657,36 @@ body.dark-mode #dark-mode-toggle {
     filter: drop-shadow(0 1px 1px #719bb0);
 }
 .christmas .event-log-header .settled-snow { transform: scaleX(-1); }
+
+body.christmas {
+    --container-bg: #215040;
+    --bg-color: #562737;
+    --text-color: #fff5df;
+    --info-color: #dccdb4;
+    --accent-color: #ffda91;
+    --button-bg: #286344;
+    --button-hover: #315d40;
+    --reset-bg: #96374b;
+    --reset-hover: #812c40;
+    --pause-bg: #865820;
+    --pause-hover: #70491c;
+    --input-bg: #183c32;
+    --border-color: #9d8967;
+    color: var(--text-color);
+    accent-color: var(--accent-color);
+    color-scheme: dark;
+}
+body.christmas.dark-mode {
+    --container-bg: #14362d;
+    --bg-color: #371c29;
+}
+.christmas .session-status { border-color: var(--border-color); }
+.christmas .session-visual.short-break { --session-color: #bce6bd; }
+.christmas .session-visual.long-break { --session-color: #ffd2a4; }
+.christmas .header-buttons button:hover,
+body.christmas.dark-mode #dark-mode-toggle {
+    background: var(--input-bg);
+    color: var(--accent-color);
+}
+.christmas .progress-dot { background-color: #738f80; }
+.christmas .progress-dot.active { background-color: var(--accent-color); }
