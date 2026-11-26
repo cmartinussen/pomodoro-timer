@@ -530,3 +530,68 @@ body.dark-mode #dark-mode-toggle {
     background-color: var(--input-bg);
     color: var(--text-color);
 }
+.holiday-scene { display: none; }
+.christmas {
+    background: radial-gradient(ellipse at top, #356750, #102f2b 72%);
+}
+.christmas.dark-mode {
+    background: radial-gradient(ellipse at top, #234639, #0b1d1c 72%);
+}
+.christmas .container {
+    position: relative;
+    box-shadow: 0 0 0 1px #cfab6c, 0 12px 48px #071e2166;
+}
+.christmas .holiday-scene {
+    display: block;
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+.holiday-lights {
+    display: flex;
+    justify-content: space-around;
+    height: 11px;
+    border-bottom: 2px solid #20382b;
+    border-radius: 0 0 50% 50%;
+}
+.holiday-lights i {
+    position: relative;
+    top: 8px;
+    width: 8px;
+    height: 15px;
+    border-radius: 45% 45% 55% 55%;
+    color: #ffe0a0;
+    background: currentColor;
+    box-shadow: inset 1px 2px 2px #fff9, 0 0 10px currentColor;
+    transform: rotate(9deg);
+}
+.holiday-lights i:nth-child(3n) { color: #f58e82; transform: rotate(-12deg); }
+.holiday-lights i:nth-child(3n+1) { color: #a7ddc1; }
+.holiday-snow span {
+    position: absolute;
+    color: #e5f4ee;
+    opacity: .56;
+    animation: holiday-drift 16s ease-in-out infinite alternate;
+}
+@keyframes holiday-drift {
+    from { transform: translate(-8px, -4vh) rotate(-12deg); }
+    to { transform: translate(12px, 7vh) rotate(20deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .holiday-snow span { animation: none; }
+}
+#christmas-theme {
+    font: inherit;
+    color: var(--text-color);
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px;
+}
+#settings-modal { overflow-y: auto; }
+@media (max-width: 540px) {
+    body.christmas { padding-inline: 12px; }
+    .christmas .container { box-sizing: border-box; max-width: 100%; padding: 26px 16px; }
+}

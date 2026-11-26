@@ -4,6 +4,7 @@ const ASSETS_TO_CACHE = [
   './',
   'index.html',
   'styles.css',
+  'christmas.js',
   'script.js',
   'manifest.json',
   'favicon-v2.svg',
@@ -51,6 +52,7 @@ function shouldUseNetworkFirst(request) {
   return [
     '/index.html',
     '/styles.css',
+    '/christmas.js',
     '/script.js',
     '/manifest.json'
   ].some((pathSuffix) => url.pathname.endsWith(pathSuffix));
