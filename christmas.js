@@ -9,6 +9,9 @@
         const enabled = picker.value === 'on' ||
             (picker.value === 'auto' && new Date().getMonth() === 11);
         document.body.classList.toggle('christmas', enabled);
+        const status = document.querySelector('#theme-status');
+        status.textContent = enabled ? 'Christmas lights and snow are on.' :
+            picker.value === 'auto' ? 'Starts December 1. Choose Always on to see it now.' : 'Classic timer is on.';
         if (!enabled || lights.childElementCount) return;
 
         for (let i = 0; i < 24; i++) {
@@ -26,11 +29,12 @@
 
     function choose(value) {
         picker.value = value;
-        localStorage.setItem(key, value);
         refresh();
+        try { localStorage.setItem(key, value); } catch { /* Keep the choice for this visit. */ }
     }
 
-    const saved = localStorage.getItem(key);
+    let saved;
+    try { saved = localStorage.getItem(key); } catch { /* Storage may be disabled. */ }
     picker.value = ['on', 'off'].includes(saved) ? saved : 'auto';
     picker.addEventListener('change', () => choose(picker.value));
     document.querySelector('#reset-settings').addEventListener('click', () => choose('auto'));

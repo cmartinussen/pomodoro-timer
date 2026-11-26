@@ -595,3 +595,26 @@ body.dark-mode #dark-mode-toggle {
     body.christmas { padding-inline: 12px; }
     .christmas .container { box-sizing: border-box; max-width: 100%; padding: 26px 16px; }
 }
+
+.holiday-trim { display: none; }
+.christmas .holiday-trim {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    margin-bottom: 10px;
+    color: #f7ecce;
+    background: linear-gradient(100deg, #173d31, #315d47, #173d31);
+    border-radius: 8px;
+    pointer-events: none;
+}
+.holiday-trim i {
+    flex: 1;
+    height: 18px;
+    background:
+        radial-gradient(ellipse 4px 6px at 8px 9px, #ffe0a0 75%, transparent),
+        radial-gradient(ellipse 4px 6px at 27px 11px, #fba399 75%, transparent),
+        radial-gradient(ellipse 4px 6px at 46px 9px, #b8ebcf 75%, transparent);
+    background-size: 57px 18px;
+}
+#theme-status { display: block; margin-top: 5px; color: var(--info-color); }
