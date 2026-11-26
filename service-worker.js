@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'local';
 const CACHE_NAME = `pomodoro-cache-${CACHE_VERSION}`;
 const ASSETS_TO_CACHE = [
   './',
@@ -24,7 +24,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter((key) => key.startsWith('pomodoro-cache-') && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       )
     )
