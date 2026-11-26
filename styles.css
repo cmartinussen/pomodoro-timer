@@ -618,3 +618,20 @@ body.dark-mode #dark-mode-toggle {
     background-size: 57px 18px;
 }
 #theme-status { display: block; margin-top: 5px; color: var(--info-color); }
+
+@media (max-width: 540px) {
+    body.christmas {
+        height: auto;
+        min-height: 100svh;
+        box-sizing: border-box;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 44px);
+    }
+    .christmas .holiday-trim {
+        position: fixed;
+        top: env(safe-area-inset-top, 0px);
+        left: 12px;
+        right: 12px;
+        z-index: 1;
+    }
+    #christmas-theme { font-size: 16px; }
+}
