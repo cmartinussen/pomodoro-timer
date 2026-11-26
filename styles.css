@@ -635,3 +635,25 @@ body.dark-mode #dark-mode-toggle {
     }
     #christmas-theme { font-size: 16px; }
 }
+
+.settled-snow { display: none; }
+.christmas .timer,
+.christmas .event-log-header {
+    position: relative;
+    padding-top: 18px;
+}
+.christmas .settled-snow {
+    display: block;
+    position: absolute;
+    inset: 0 0 auto;
+    height: 16px;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 10% 8px at 10% 100%, #fff 94%, transparent),
+        radial-gradient(ellipse 18% 12px at 25% 100%, #fff 94%, transparent),
+        radial-gradient(ellipse 24% 7px at 48% 100%, #f2faff 94%, transparent),
+        radial-gradient(ellipse 16% 10px at 80% 100%, #fff 94%, transparent),
+        radial-gradient(ellipse 9% 6px at 92% 100%, #f2faff 94%, transparent);
+    filter: drop-shadow(0 1px 1px #719bb0);
+}
+.christmas .event-log-header .settled-snow { transform: scaleX(-1); }

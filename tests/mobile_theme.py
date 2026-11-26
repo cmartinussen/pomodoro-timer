@@ -17,6 +17,13 @@ def select_theme(page, value):
 def check_theme(page, enabled):
     trim = page.locator(".holiday-trim")
     scene = page.locator(".holiday-scene")
+    for parent in (".timer", ".event-log-header"):
+        snow = page.locator(parent + " > .settled-snow")
+        if enabled:
+            expect(snow).to_be_visible()
+            expect(snow).to_have_css("pointer-events", "none")
+        else:
+            expect(snow).to_be_hidden()
     if enabled:
         expect(trim).to_be_in_viewport()
         expect(trim).to_be_visible()
