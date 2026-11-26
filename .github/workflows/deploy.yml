@@ -29,7 +29,7 @@ jobs:
         version="$(node -p "require('./package.json').version")"
         revision="$(git rev-parse --short=8 HEAD)"
         updated="$(TZ=Europe/Copenhagen date -d "@$(git show -s --format=%ct HEAD)" +%F)"
-        sed -i "s|<span id=\"app-version\">local</span>|<span id=\"app-version\">${version} (${revision})</span> · Updated <time datetime=\"${updated}\">${updated}</time>|" index.html
+        sed -i "s|<span id=\"app-version\">[^<]*</span> · Updated <time[^>]*>[^<]*</time>|<span id=\"app-version\">${version} (${revision})</span> · Updated <time datetime=\"${updated}\">${updated}</time>|" index.html
         grep -Fq "${version} (${revision})" index.html
         sed -i "s|CACHE_VERSION = 'local'|CACHE_VERSION = '${GITHUB_SHA}'|" service-worker.js
         grep -Fq "${GITHUB_SHA}" service-worker.js
